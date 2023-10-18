@@ -60,6 +60,37 @@ const fragmentTextureNormalShader =
     `;
 
 
+/**
+ * A shader that uses a texture
+ * It also uses a normal map
+ * 
+ *  */
+const fragmentTextureNormalPointLightShader =
+    `#version 300 es
+    precision highp float;
+
+    in vec2 textureCoordOut;
+    in vec3 normalOut;
+    in vec3 fragPosOut;
+    uniform vec3 viewPos;
+    
+    uniform sampler2D textureSampler;
+
+    out vec4 color;
+
+    void main() {
+        vec3 normal = normalize(normalOut);
+        vec3 lightDirection = normalize(vec3(1.0, 1.0, 1.0));
+        float lightIntensity = dot(normal, lightDirection);
+        float specular = pow(lightIntensity, 2.0);
+        vec2 textureCoord = vec2(textureCoordOut.x, 1.0 - textureCoordOut.y);
+        vec4 textureColor = texture(textureSampler, textureCoord);
+        
+        color = textureColor;
+       
+    }
+    `;
+
 
 
 
