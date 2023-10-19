@@ -2,7 +2,7 @@
  * A class for storing the light data for a scene
  */
 
-class GLPointLight {
+export class GLPointLight {
     position: number[] = [0, 0, 0];
     // the shading equation for a point light is:
     // I = Ia + Id + Is
@@ -31,6 +31,7 @@ class GLPointLight {
 
 }
 
-class GLLights {
+export class GLLights {
     private _pointLights: Array<GLPointLight> = [];
 }
+

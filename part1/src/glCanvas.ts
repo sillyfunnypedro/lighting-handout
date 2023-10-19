@@ -172,6 +172,7 @@ function compileProgram(gl: WebGLRenderingContext): WebGLProgram | null {
     // check if the shader program linked successfully
     const shaderProgramLinked = gl.getProgramParameter(shaderProgram, gl.LINK_STATUS);
     if (!shaderProgramLinked) {
+        console.log(gl.getProgramInfoLog(shaderProgram));
         console.error('Failed to link shader program');
         return null;
     }

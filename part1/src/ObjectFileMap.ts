@@ -4,6 +4,7 @@ export const objectFileMap: Map<string, string> = new Map([
     ["square", "square/square.obj"],
     ["square-four-vertex", "square_four_vertex/square.obj"],
     ["square_four_by_four", "square_four_by_four/square.obj"],
+    ["flat_square", "flat_square/square.obj"],
     ["cube", "cube/cube.obj"],
     ["cube-tex", "textured_cube/cube.obj"],
     ["house", "house/house_obj.obj"],

@@ -135,12 +135,19 @@ const vertexTextureNormalFullTransformationShader =
 
     out vec2 textureCoordOut;
     out vec3 normalOut;
+    out vec3 surfaceToLight;
+    out vec3 fragOutPosition;
     
     void main() {
         gl_Position =   projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
         
+        vec3 surfaceWorldPosition = vec3(modelMatrix * vec4(position, 1.0));
+        vec3 lightWorldPosition = vec3(-5.0, 2.0, -5.0);
+        surfaceToLight = lightWorldPosition - surfaceWorldPosition;
+
         textureCoordOut = textureCoord;
         normalOut = normal;
+        fragOutPosition = position;
     }
 `
 
@@ -163,7 +170,7 @@ const vertexTextureNormalLightFullTransformationShader =
 
     out vec2 textureCoordOut;
     out vec3 normalOut;
-    out vec3 fragPosOut;
+    out vec3 fragOutPosition;
     
     void main() {
         gl_Position =   projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
@@ -174,7 +181,7 @@ const vertexTextureNormalLightFullTransformationShader =
         mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
         normalOut = normalMatrix * vec4(normal, 0.0);
         
-        fragPosOut = normalMatrix * vec4(position, 1.0);
+        fragOutPosition = normalMatrix * vec4(position, 1.0);
     }
 `
 
