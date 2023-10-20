@@ -4,9 +4,8 @@
 import Camera from './Camera';
 import ModelGL from './ModelGL';
 import PPMFileLoader from './PPMFileLoader';
-import fragmentShaderMap from './shaders/FragmentShader'
-import vertexShaderMap from './shaders/VertexShader'
-import shaderVert from './shaders/VertexShader.glsl'
+
+import shaderTestMap from './ShaderManager'
 
 import SceneData from './SceneData';
 
@@ -87,10 +86,10 @@ function compileProgram(gl: WebGLRenderingContext): WebGLProgram | null {
     }
 
 
-    const vertexShaderName = "vertexLightingLecture"
-    const fragmentShaderName = "fragmentLightingLectureShader";
+    const vertexShaderName = "vertexShader"
+    const fragmentShaderName = "fragmentShader";
 
-    console.log(shaderVert);
+
 
     console.log("Compiling " + vertexShaderName + " and " + fragmentShaderName);
 
@@ -104,7 +103,7 @@ function compileProgram(gl: WebGLRenderingContext): WebGLProgram | null {
     }
 
     // get the vertex shader source code from the shader map
-    const vertexShader = vertexShaderMap.get(vertexShaderName) as string;
+    const vertexShader = shaderTestMap.get(vertexShaderName) as string;
 
     // Now that we have the code let's compile it compile it
     // attach the shader source code to the vertex shader
@@ -132,7 +131,7 @@ function compileProgram(gl: WebGLRenderingContext): WebGLProgram | null {
     }
 
     // get the fragment shader source code from the shader map 
-    const fragmentShader = fragmentShaderMap.get(fragmentShaderName) as string;
+    const fragmentShader = shaderTestMap.get(fragmentShaderName) as string;
 
     // attach the shader source code to the fragment shader
     gl.shaderSource(fragmentShaderObject, fragmentShader);

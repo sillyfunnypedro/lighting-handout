@@ -1,15 +1,4 @@
-
-
-
-
-
-/**
- * A shader that uses a texture
- * It also uses a normal map
- * 
- *  */
-const fragmentLightingLectureShader =
-    `#version 300 es
+#version 300 es
     precision highp float;
     in vec2 textureCoordOut;
     in vec3 normalOut;
@@ -39,18 +28,18 @@ const fragmentLightingLectureShader =
         float lightIntensity = dot(normal, surfaceToLightDirection);
         lightIntensity = clamp(lightIntensity, 0.0, 1.0);
 
+
         // calculate the specular intensity
         // calculate the light reflected vector
-        vec3 lightReflection = reflect(surfaceToLightDirection, normal);
+        vec3 lightReflection = reflect(-surfaceToLightDirection, normal);
         lightReflection = normalize(lightReflection);
 
         // calculate the cosine of the angle between the light reflection vector and the view direction
         float specularIntensity = dot(lightReflection, viewDirection);
+
+        // when angle between the viewer and the light reflection vector is greater than 90 degrees, the specular intensity is 0
+        specularIntensity = clamp(specularIntensity, 0.0, 1.0);  
        
-
-        // clamp the specular intensity to between 0 and 1
-        specularIntensity = clamp(-specularIntensity, 0.0, 1.0);
-
 
         specularIntensity = pow(specularIntensity, shininess);
 
@@ -58,7 +47,7 @@ const fragmentLightingLectureShader =
 
         // calculate the final specular intensity
         specularIntensity = specularIntensity * Ks;
-
+        
         // calculate the final diffuse intensity
         lightIntensity = lightIntensity * Kd;
 
@@ -66,7 +55,7 @@ const fragmentLightingLectureShader =
         vec4 ambient = lightColor * surfaceColor * Ka;  
 
         // calculate the final light
-        vec4 phongColor = ambient + (lightIntensity * surfaceColor) + (specularIntensity * lightColor);
+        vec4 phongColor = ambient + (lightIntensity * surfaceColor) + specularIntensity * lightColor;
         return phongColor/(Ka+Kd+Ks);
         
     }
@@ -84,6 +73,7 @@ const fragmentLightingLectureShader =
         // calculate the diffuse intensity
         float lightIntensity = dot(normal, surfaceToLightDirection);
         lightIntensity = clamp(lightIntensity, 0.0, 1.0);
+
 
         // calculate the specular intensity
         // calculate the halfway vector
@@ -126,7 +116,7 @@ const fragmentLightingLectureShader =
 
         vec3 normal = normalize(normalOut);
         
-        vec4 phongLightColor = vec4(1.0, 1.0, 0.0, 1.0);
+        vec4 phongLightColor = vec4(0.0039, 0.8078, 0.0549, 1.0);
         vec4 blinnLightColor = vec4(1.0, 1.0, 0.0, 1.0);
 
 
@@ -150,10 +140,7 @@ const fragmentLightingLectureShader =
         
 
         color = (shaderParameter * phongColor + (1.0-shaderParameter)*blinnColor) ;
-        
-
     }
-    `;
 
 
 
@@ -161,9 +148,3 @@ const fragmentLightingLectureShader =
 
 
 
-
-
-const fragmentShaderMap = new Map<string, string>();
-
-fragmentShaderMap.set('fragmentLightingLectureShader', fragmentLightingLectureShader)
-export default fragmentShaderMap;

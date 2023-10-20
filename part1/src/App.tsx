@@ -7,8 +7,10 @@ import Camera from './Camera';
 import ObjFileLoader from './ObjFileLoader';
 import ModelGL from './ModelGL'
 import { updateSceneData, setupCanvas } from './glCanvas';
+import { cacheShaders } from './ShaderManager';
 
 const objLoader = ObjFileLoader.getInstance();
+cacheShaders();
 
 
 function App() {
