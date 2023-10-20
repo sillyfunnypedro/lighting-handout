@@ -24,7 +24,7 @@
 
         // calculate the matrix to transform the normal
         mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
-        normalOut =  vec3(0,1,0);
+        normalOut =  normalMatrix * vec3(0.0, 1.0, 0.0);
         fragOutPosition = vec3(surfaceWorldPosition.xyz);
 
         viewDirection = normalize(eyePosition - surfaceWorldPosition );
