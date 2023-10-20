@@ -31,8 +31,8 @@ const vertexLightingLecture =
         textureCoordOut = textureCoord;
 
         // calculate the matrix to transform the normal
-        mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
-        normalOut = normalMatrix * vec3(0,1,0);
+        // TODO: 1.0 - add the code to calculate the normal matrix
+        normalOut =  vec3(0,1,0);
         vec4 fragOutPosition4 = modelMatrix * vec4(position, 1.0);
         fragOutPosition = vec3(fragOutPosition4);
         viewDirection = normalize(eyePosition - surfaceWorldPosition );

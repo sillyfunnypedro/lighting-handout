@@ -36,23 +36,22 @@ const fragmentLightingLectureShader =
         // phong lighting for light one
 
         // calculate the diffuse intensity
-        float lightIntensity = dot(normal, surfaceToLightDirection);
-        lightIntensity = clamp(lightIntensity, 0.0, 1.0);
+        float lightIntensity = 1.0;
 
         // calculate the specular intensity
         // calculate the light reflected vector
-        vec3 lightReflection = reflect(surfaceToLightDirection, normal);
-        lightReflection = normalize(lightReflection);
+
+        vec3 lightReflection;
 
         // calculate the cosine of the angle between the light reflection vector and the view direction
-        float specularIntensity = dot(lightReflection, viewDirection);
+        float specularIntensity = 1.0;
        
 
         // clamp the specular intensity to between 0 and 1
-        specularIntensity = clamp(-specularIntensity, 0.0, 1.0);
+       
 
 
-        specularIntensity = pow(specularIntensity, shininess);
+        // apply shininess to the specular intensity
 
         
 
@@ -82,21 +81,21 @@ const fragmentLightingLectureShader =
         // phong lighting for light one
 
         // calculate the diffuse intensity
-        float lightIntensity = dot(normal, surfaceToLightDirection);
-        lightIntensity = clamp(lightIntensity, 0.0, 1.0);
+        float lightIntensity = 1.0;
+        
 
         // calculate the specular intensity
         // calculate the halfway vector
-        vec3 halfVector = normalize(surfaceToLightDirection + viewDirection);
+        
 
         // calculate the cosine of the angle between the half vector and the normal
-        float specularIntensity = dot(normal, halfVector);
+        float specularIntensity = 1.0;
 
         // raise the specular intensity to the power of the shine
-        specularIntensity = pow(specularIntensity, shininess);
+        
 
         // clamp the specular intensity to between 0 and 1
-        specularIntensity = clamp(specularIntensity, 0.0, 1.0);
+        
 
         // calculate the final specular intensity
         specularIntensity = specularIntensity * Ks;
