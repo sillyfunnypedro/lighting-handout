@@ -27,11 +27,16 @@ class Camera {
     roll: number;
     usePerspective: boolean = true;
     renderSolid: boolean = true;
+    shaderParameter: number = 0.5;
+    shininess: number = 10.0;
+    Ks: number = 0.2;
+    Kd: number = 0.2;
+    Ka: number = 0.2;
 
     constructor() {
         this.viewMatrix = mat4.create();
         this.projectionMatrix = mat4.create();
-        this.eyePosition = vec3.fromValues(0, 0, 8)
+        this.eyePosition = vec3.fromValues(-20, 10, 20)
         this.lookAt = vec3.fromValues(0, 0, 0);
         this.upVector = vec3.fromValues(0, 1, 0);
         this.aspectRatio = 1;
@@ -41,6 +46,7 @@ class Camera {
         this.viewPortWidth = 1;
         this.viewPortHeight = 1;
         this.roll = 0;
+        this.shaderParameter = 0.5;
         this.updateCamera();
     }
 
@@ -55,15 +61,34 @@ class Camera {
         this.viewPortWidth = 1;
         this.viewPortHeight = 1;
         this.roll = 0;
+        this.shaderParameter = 0.5;
         this.updateCamera();
     }
 
 
+    public setShaderParameter(shaderParameter: number): void {
+        this.shaderParameter = shaderParameter;
+    }
 
+    public setShininess(shininess: number): void {
+        this.shininess = shininess;
+    }
 
     public setEyePosition(eyePosition: vec3): void {
         this.eyePosition = eyePosition;
         this.updateCamera();
+    }
+
+    public setKs(Ks: number): void {
+        this.Ks = Ks;
+    }
+
+    public setKd(Kd: number): void {
+        this.Kd = Kd;
+    }
+
+    public setKa(Ka: number): void {
+        this.Ka = Ka;
     }
 
     public moveForward(distance: number): void {
@@ -147,29 +172,11 @@ class Camera {
     }
 
     public panRight(distance: number): void {
-        // calculate the right vector as the cross product of the look direction and the up vector
-        let lookDirection = vec3.create();
-        vec3.subtract(lookDirection, this.lookAt, this.eyePosition);
-        let rightVector = vec3.create();
-        vec3.cross(rightVector, lookDirection, this.upVector);
-        vec3.normalize(rightVector, rightVector);
-        vec3.scaleAndAdd(this.eyePosition, this.eyePosition, rightVector, distance);
-        vec3.scaleAndAdd(this.lookAt, this.lookAt, rightVector, distance);
+
     }
 
     public panUp(distance: number): void {
-        // calculate the right vector as the cross product of the look direction and the up vector
-        let lookDirection = vec3.create();
-        vec3.subtract(lookDirection, this.lookAt, this.eyePosition);
-        let rightVector = vec3.create();
-        vec3.cross(rightVector, lookDirection, this.upVector);
-        vec3.normalize(rightVector, rightVector);
-        // now calculate the orthogonal up vector
-        let upVector = vec3.create();
-        vec3.cross(upVector, rightVector, lookDirection);
-        vec3.normalize(upVector, upVector);
-        vec3.scaleAndAdd(this.eyePosition, this.eyePosition, upVector, distance);
-        vec3.scaleAndAdd(this.lookAt, this.lookAt, upVector, distance);
+
     }
 
 

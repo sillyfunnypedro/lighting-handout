@@ -1,120 +1,3 @@
-/** shaders for the 5310 Graphics course. */
-
-
-/**
- * Vertex shader for the 5310 Graphics course.
- *  This is a very simple shader that just passes the vertex position through.
- * */
-const vertexShader =
-    `#version 300 es
-    in vec3 position;
-
-    void main() {
-        gl_Position =   vec4(position, 1.0);
-    }
-`
-
-/**
- * Vertex shader for the 5310 Graphics course.
- * 
- * This shader applies a full transformation to the vertex position.
- */
-const vertexFullTransformationShader =
-    `#version 300 es
-    in vec3 position;
-
-    uniform mat4 modelMatrix;
-    uniform mat4 viewMatrix;
-    uniform mat4 projectionMatrix;
-
-    void main() {
-        gl_Position =   projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
-    
-    }
-`
-
-/**
- * Vertex shader for the 5310 Graphics course.
- * 
- * This shader applies a rotation to the vertex position.
- */
-const vertexRotationShader =
-    `#version 300 es
-    in vec3 position;
-    in vec2 textureCoord;
-
-    uniform mat4 modelMatrix;
-
-    out vec2 textureCoordOut;
-
-    void main() {
-        gl_Position =   modelMatrix * vec4(position, 1.0);
-        textureCoordOut = textureCoord;
-    }
-`
-
-/**
- * Vertex shader for the 5310 Graphics course.
- * 
- * This shader applies a rotation to the vertex position.
- * It also passes the texture coordinate through.
- */
-const vertexTextureShader =
-    `#version 300 es
-    layout(location=0)in vec3 position;
-    layout(location=1)in vec2 textureCoord;
-
-    out vec2 textureCoordOut;
-
-    void main() {
-        gl_Position =   vec4(position, 1.0);
-        textureCoordOut = textureCoord;
-    }
-`
-
-/**
- * Vertex shader for the 5310 Graphics course.
- * 
- * This shader applies a rotation to the vertex position.
- * It also passes the texture coordinate through.
-  */
-const vertexTextureRotationShader =
-    `#version 300 es
-    layout(location=0) in vec3 position;
-    layout(location=1) in vec2 textureCoord;
-
-    uniform mat4 modelMatrix;
-
-    out vec2 textureCoordOut;
-
-    void main() {
-        gl_Position =   modelMatrix * vec4(position, 1.0);
-        textureCoordOut = textureCoord;
-    }
-`
-
-/**
- * Vertex shader for the 5310 Graphics course.
- * 
- * This shader applies a full transformation to the vertex position.
- * It also passes the texture coordinate through.
- */
-const vertexTextureFullTransformationShader =
-    `#version 300 es
-    layout(location=0) in vec3 position;
-    layout(location=1) in vec2 textureCoord;
-
-    uniform mat4 modelMatrix;
-    uniform mat4 viewMatrix;
-    uniform mat4 projectionMatrix;
-
-    out vec2 textureCoordOut;
-
-    void main() {
-        gl_Position =   projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
-        textureCoordOut = textureCoord;
-    }
-`
 
 /**
  * Vertex shader for the 5310 Graphics course.
@@ -123,74 +6,43 @@ const vertexTextureFullTransformationShader =
  * It also passes the texture coordinate through.
  * It also passes the normal through.
  */
-const vertexTextureNormalFullTransformationShader =
+const vertexLightingLecture =
     `#version 300 es
     layout(location=0) in vec3 position;
     layout(location=1) in vec2 textureCoord;
-    layout(location=2) in vec3 normal;
 
     uniform mat4 modelMatrix;
     uniform mat4 viewMatrix;
     uniform mat4 projectionMatrix;
+    uniform vec3 eyePosition;
+    uniform float shaderParameter;
+
 
     out vec2 textureCoordOut;
     out vec3 normalOut;
-    out vec3 surfaceToLight;
     out vec3 fragOutPosition;
+    out vec3 viewDirection;
     
     void main() {
         gl_Position =   projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
         
         vec3 surfaceWorldPosition = vec3(modelMatrix * vec4(position, 1.0));
-        vec3 lightWorldPosition = vec3(-5.0, 2.0, -5.0);
-        surfaceToLight = lightWorldPosition - surfaceWorldPosition;
 
         textureCoordOut = textureCoord;
-        normalOut = normal;
-        fragOutPosition = position;
-    }
-`
 
-/**
- * Vertex shader for the 5310 Graphics course.
- * 
- * This shader applies a full transformation to the vertex position.
- * It also passes the texture coordinate through.
- * It also passes the normal through.
- */
-const vertexTextureNormalLightFullTransformationShader =
-    `#version 300 es
-    layout(location=0) in vec3 position;
-    layout(location=1) in vec2 textureCoord;
-    layout(location=2) in vec3 normal;
-
-    uniform mat4 modelMatrix;
-    uniform mat4 viewMatrix;
-    uniform mat4 projectionMatrix;
-
-    out vec2 textureCoordOut;
-    out vec3 normalOut;
-    out vec3 fragOutPosition;
-    
-    void main() {
-        gl_Position =   projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
-        
-        textureCoordOut = textureCoord;
-
-        // apply the inverse transpose of the model matrix to the normal
+        // calculate the matrix to transform the normal
         mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
-        normalOut = normalMatrix * vec4(normal, 0.0);
-        
-        fragOutPosition = normalMatrix * vec4(position, 1.0);
+        normalOut = normalMatrix * vec3(0,1,0);
+        vec4 fragOutPosition4 = modelMatrix * vec4(position, 1.0);
+        fragOutPosition = vec3(fragOutPosition4);
+        viewDirection = normalize(eyePosition - surfaceWorldPosition );
     }
 `
+
+
 
 const vertexShaderMap = new Map<string, string>();
-vertexShaderMap.set('vertexShader', vertexShader);
-vertexShaderMap.set('vertexFullTransformationShader', vertexFullTransformationShader);
-vertexShaderMap.set('vertexShaderRotation', vertexRotationShader);
-vertexShaderMap.set('vertexTextureShader', vertexTextureShader);
-vertexShaderMap.set('vertexTextureRotationShader', vertexTextureRotationShader);
-vertexShaderMap.set('vertexTextureFullTransformationShader', vertexTextureFullTransformationShader);
-vertexShaderMap.set('vertexTextureNormalFullTransformationShader', vertexTextureNormalFullTransformationShader);
+
+vertexShaderMap.set('vertexLightingLecture', vertexLightingLecture);
+
 export default vertexShaderMap;

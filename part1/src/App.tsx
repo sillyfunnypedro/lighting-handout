@@ -21,7 +21,7 @@ function App() {
 
 
   // the renderObject is the name of the object to render
-  const [renderObject, setRenderObject] = useState('tri-plain');
+  const [renderObject, setRenderObject] = useState('flat_square');
 
   const [modelGL, setModelGL] = useState<ModelGL | null>(null);
 
@@ -32,7 +32,7 @@ function App() {
 
 
   useEffect(() => {
-    setRenderObject('tri-plain');
+    setRenderObject('flat_square');
     setupCanvas();
     updateSceneData(modelGL, camera);
     // eslint-disable-next-line react-hooks/exhaustive-deps

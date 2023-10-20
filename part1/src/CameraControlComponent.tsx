@@ -23,6 +23,11 @@ function CameraControlComponent({ camera, updateCamera }: CameraControlComponent
     const [projectionMode, setProjectionMode] = useState(camera.usePerspective ? 'perspective' : 'orthographic');
     const [renderMode, setRenderMode] = useState(camera.renderSolid ? 'solid' : 'wireframe');
     const sliderWidth = 300;
+    const [shaderParameter, setShaderParameter] = useState(0.5);
+    const [shininess, setShininess] = useState(10);
+    const [Ks, setKs] = useState(0);
+    const [Kd, setKd] = useState(0);
+    const [Ka, setKa] = useState(0.2);
 
 
 
@@ -88,6 +93,41 @@ function CameraControlComponent({ camera, updateCamera }: CameraControlComponent
         updateCamera(camera);
     }
 
+    function shaderChoice(event: React.ChangeEvent<HTMLInputElement>) {
+        const valueString = event.target.value;
+        const value = parseFloat(valueString);
+        camera.setShaderParameter(value);
+        setShaderParameter(value);
+    }
+
+    function shininessProcess(event: React.ChangeEvent<HTMLInputElement>) {
+        const valueString = event.target.value;
+        const value = parseFloat(valueString);
+        camera.setShininess(value);
+        setShininess(value);
+    }
+
+    function KsProcess(event: React.ChangeEvent<HTMLInputElement>) {
+        const valueString = event.target.value;
+        const value = parseFloat(valueString);
+        camera.setKs(value);
+        setKs(value);
+    }
+
+    function KdProcess(event: React.ChangeEvent<HTMLInputElement>) {
+        const valueString = event.target.value;
+        const value = parseFloat(valueString);
+        camera.setKd(value);
+        setKd(value);
+    }
+
+    function KaProcess(event: React.ChangeEvent<HTMLInputElement>) {
+        const valueString = event.target.value;
+        const value = parseFloat(valueString);
+        camera.setKa(value);
+        setKa(value);
+    }
+
 
 
     function makePerspectiveControls() {
@@ -148,6 +188,60 @@ function CameraControlComponent({ camera, updateCamera }: CameraControlComponent
             <table>
                 <tbody>
                     <tr>
+                        <td> choose shader</td>
+                        <td>
+                            <input name="sliderHack" type="range" min="0" max="1" step="any"
+                                value={shaderParameter} className="slider"
+                                onChange={(event) => shaderChoice(event)} id="ShaderParameter">
+                            </input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td> Blinn = 0 ---------------------------- Phong = 1
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> shininess</td>
+                        <td>
+                            <input name="sliderHack" type="range" min="5" max="1000" step="any"
+                                value={shininess} className="slider"
+                                onChange={(event) => shininessProcess(event)} id="Shininess">
+                            </input>
+                        </td>
+                        <td> {shininess} </td>
+                    </tr>
+                    <tr>
+                        <td> Ks</td>
+                        <td>
+                            <input name="sliderHacks" type="range" min="0" max="10" step="any"
+                                value={Ks} className="slider"
+                                onChange={(event) => KsProcess(event)} id="Shininess">
+                            </input>
+                        </td>
+                        <td> {Ks} </td>
+                    </tr>
+                    <tr>
+                        <td> Kd</td>
+                        <td>
+                            <input name="sliderHacks" type="range" min="0" max="10" step="any"
+                                value={Kd} className="slider"
+                                onChange={(event) => KdProcess(event)} id="Shininess">
+                            </input>
+                        </td>
+                        <td> {Kd} </td>
+                    </tr>
+                    <tr>
+                        <td> Ka</td>
+                        <td>
+                            <input name="sliderHacks" type="range" min="1" max="10" step="any"
+                                value={Ka} className="slider"
+                                onChange={(event) => KaProcess(event)} id="Shininess">
+                            </input>
+                        </td>
+                        <td> {Ka} </td>
+                    </tr>
+                    <tr>
                         <td>
                             Move Camera
                         </td>
@@ -182,40 +276,7 @@ function CameraControlComponent({ camera, updateCamera }: CameraControlComponent
                         </td>
                     </tr>
 
-                    <tr>
-                        <td>
-                            Pan
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                            <button onClick={() => panLeftRight(-1)}>Left</button>
-                        </td>
-                        <td>
-                            <HorizontalJoystickSlider onDelta={(delta: number) => panLeftRight(delta)}
-                                scale={15}
-                                width={sliderWidth} />
-                        </td>
-                        <td>
-                            <button onClick={() => panLeftRight(1)}>Right</button>
 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Pan
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                            <button onClick={() => panUpDown(-1)}>Down</button>
-                        </td>
-                        <td>
-                            <HorizontalJoystickSlider onDelta={(delta: number) => panUpDown(delta)}
-                                scale={15}
-                                width={sliderWidth} />
-                        </td>
-                        <td>
-                            <button onClick={() => panUpDown(1)}>Up</button>
-
-                        </td>
-                    </tr>
                     <tr>
                         <td>
                             Look

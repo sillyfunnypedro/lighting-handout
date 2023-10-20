@@ -86,8 +86,8 @@ function compileProgram(gl: WebGLRenderingContext): WebGLProgram | null {
     }
 
 
-    const vertexShaderName = sceneData.model.vertexShaderName;
-    const fragmentShaderName = sceneData.model.fragmentShaderName;
+    const vertexShaderName = "vertexLightingLecture"
+    const fragmentShaderName = "fragmentLightingLectureShader";
 
     console.log("Compiling " + vertexShaderName + " and " + fragmentShaderName);
 
@@ -193,68 +193,8 @@ function setUpTexture(gl: WebGLRenderingContext,
     if (!model) {
         return null;
     }
+    return null;
 
-    // get the texture coordinate attribute location
-    const texCoordLocation = gl.getAttribLocation(shaderProgram, 'textureCoord');
-    // check to see if we got the attribute location
-    if (texCoordLocation === -1) {
-        console.log('Failed to get the storage location of texCoord');
-    }
-
-    // enable the texture coordinate attribute
-    gl.enableVertexAttribArray(texCoordLocation);
-
-    // tell the texture coordinate attribute how to get data out of the texture coordinate buffer
-    gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, model.vertexStride, model.textureOffset);
-
-    // create a texture
-    let texture = gl.createTexture();
-    if (!texture) {
-        console.log('Failed to create the texture object');
-        return null
-    }
-
-    // create a texture unit
-    const textureUnit = gl.TEXTURE0;
-
-    // bind the texture to the texture unit
-    gl.activeTexture(textureUnit);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-
-    // set the parameters for the texture
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-    // set the filtering for the texture
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-
-    const diffuseTextureName = model.textures.get("map_Kd") as string;
-
-    // load the texture data
-    // The PPMFileLoader caches the ppm files so if the file has already been loaded
-    // so it is ok to just call this here since it will not load the file again
-    const ppmIMG = PPMFileLoader.getInstance().loadFile(diffuseTextureName);
-
-
-    if (ppmIMG === undefined) {
-        console.log("ppmFile is undefined");
-        return null
-    }
-    // load the texture data into the texture
-    if (ppmIMG.data === undefined) {
-        console.log("ppmFile.data is undefined");
-        return null;
-    }
-
-    // set the value of the uniorm sampler to the texture unit
-    let textureLocation = gl.getUniformLocation(shaderProgram, 'textureSampler');
-    gl.uniform1i(textureLocation, 0);
-
-    // bind the data to the texture
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, ppmIMG.width, ppmIMG.height, 0, gl.RGB, gl.UNSIGNED_BYTE, ppmIMG.data);
-    gl.generateMipmap(gl.TEXTURE_2D);
-
-    return texture;
 }
 
 function setUpVertexBuffer(gl: WebGLRenderingContext,
@@ -333,13 +273,7 @@ function renderLoop(): void {
     setUpVertexBuffer(gl, model, shaderProgram);
 
 
-    let texture: WebGLTexture | null = null;
-    if (model.useTexture) {
-        texture = setUpTexture(gl, model, shaderProgram);
-        if (!texture) {
-            return;
-        }
-    }
+
 
 
     if (model.vertexShaderName === "vertexTextureNormalFullTransformationShader") {
@@ -376,7 +310,25 @@ function renderLoop(): void {
 
     }
 
+    gl.getUniformLocation(shaderProgram, 'eyePosition');
+    gl.uniform3fv(gl.getUniformLocation(shaderProgram, 'eyePosition'), camera.eyePosition);
 
+
+    // Set the shaders for the lecture class.
+    gl.getUniformLocation(shaderProgram, 'shaderParameter');
+    gl.uniform1f(gl.getUniformLocation(shaderProgram, 'shaderParameter'), camera.shaderParameter);
+
+    gl.getUniformLocation(shaderProgram, 'shininess');
+    gl.uniform1f(gl.getUniformLocation(shaderProgram, 'shininess'), camera.shininess);
+
+    gl.getUniformLocation(shaderProgram, 'Ks');
+    gl.uniform1f(gl.getUniformLocation(shaderProgram, 'Ks'), camera.Ks);
+
+    gl.getUniformLocation(shaderProgram, 'Kd');
+    gl.uniform1f(gl.getUniformLocation(shaderProgram, 'Kd'), camera.Kd);
+
+    gl.getUniformLocation(shaderProgram, 'Ka');
+    gl.uniform1f(gl.getUniformLocation(shaderProgram, 'Ka'), camera.Ka);
     // get the model matrix.
     const modelMatrix = model.getModelMatrix();
 
@@ -435,9 +387,10 @@ function renderLoop(): void {
         gl.drawElements(gl.TRIANGLES, model.vertexIndices.length, gl.UNSIGNED_SHORT, 0);
     }
 
-    if (texture !== null) {
-        gl.deleteTexture(texture);
-    }
+    // hack for lecture
+    // if (texture !== null) {
+    //     gl.deleteTexture(texture);
+    // }
     gl.flush();
     gl.finish();
 
