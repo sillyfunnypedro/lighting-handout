@@ -6,6 +6,7 @@ import ModelGL from './ModelGL';
 import PPMFileLoader from './PPMFileLoader';
 import fragmentShaderMap from './shaders/FragmentShader'
 import vertexShaderMap from './shaders/VertexShader'
+import shaderVert from './shaders/VertexShader.glsl'
 
 import SceneData from './SceneData';
 
@@ -88,6 +89,8 @@ function compileProgram(gl: WebGLRenderingContext): WebGLProgram | null {
 
     const vertexShaderName = "vertexLightingLecture"
     const fragmentShaderName = "fragmentLightingLectureShader";
+
+    console.log(shaderVert);
 
     console.log("Compiling " + vertexShaderName + " and " + fragmentShaderName);
 
@@ -276,17 +279,6 @@ function renderLoop(): void {
 
 
 
-    if (model.vertexShaderName === "vertexTextureNormalFullTransformationShader") {
-        // get the normal attribute location
-        const normalLocation = gl.getAttribLocation(shaderProgram, 'normal');
-
-        // enable the normal attribute
-
-        gl.enableVertexAttribArray(normalLocation);
-
-        // tell the normal attribute how to get data out of the normal buffer
-        gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, model.vertexStride, model.normalOffset);
-    }
 
     if (model.vertexShaderName === "vertexTextureFullTransformationShader"
         || model.vertexShaderName === "vertexFullTransformationShader" ||

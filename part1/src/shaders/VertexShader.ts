@@ -6,8 +6,8 @@
  * It also passes the texture coordinate through.
  * It also passes the normal through.
  */
-const vertexLightingLecture =
-    `#version 300 es
+const vertexLightingLecture = /*glsl*/`#version 300 es
+
     layout(location=0) in vec3 position;
     layout(location=1) in vec2 textureCoord;
 
